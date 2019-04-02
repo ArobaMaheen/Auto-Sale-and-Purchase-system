@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -39,6 +39,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  * FXML Controller class
@@ -107,7 +108,7 @@ public class CarUpdateController implements Initializable {
     private TextField add;
     @FXML
     private TextField numberplate;
-connection c;
+//connection c;
     /**
      * Initializes the controller class.
      */
@@ -163,72 +164,47 @@ String status;
     timeline.setCycleCount(1);
     timeline.play();
     }
+    
+    public boolean validateCarsInter(String Model,String TankCapacity,String mil,String price,String PNo){
+       
+         if(validateForInt(Model) && validateForInt(TankCapacity) && validateForInt(mil) && validateForInt(price) && validateForInt(PNo)){
+             return true;
+         }else{
+             return false;
+         }
+         
+        
+    }
+    
+    public Boolean validateForInt(String toBeValidated){
+        
+        boolean isValid=true;
+        
+        try{
+            Long.parseLong(toBeValidated);
+        }catch(Exception e){
+            isValid=false;
+            JOptionPane.showMessageDialog(null, "The Value You Entered : "+toBeValidated+" Is Not A Valid Value. Please Enter Valid Value");
+        }
+        return isValid;
+    }
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         time();
-        c=new connection();
-        c.connect();
-        
-        try{
-       
-     
         id.setEditable(false);
         id.setText(NewClass.id);
-             c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Informers");
-            
-           while(c.rs.next()){
-               infcombo.getItems().add(c.rs.getString("name"));
-           }
-            
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where ID='"+NewClass.id+"' AND d='n'");
-            c.rs.next();
-             try{
-            String imgn=c.rs.getString("image");
-             File ff=new File("resource/"+imgn+".jpg");
-             FileInputStream fis=new FileInputStream(ff);
-             Image i=new Image(fis);
-             img.setImage(i);
-            }catch(Exception e){
-                System.out.println("No Image");
-            }
-            
-            String iid=c.rs.getString("informerid");
-            id.setText(c.rs.getString("ID"));
-            carname.setText(c.rs.getString("name"));
-            Model.setText(c.rs.getString("model"));
-            CarColor.setText(c.rs.getString("color"));
-            TankCapacity.setText(c.rs.getString("tank"));
-            FuelType.setText(c.rs.getString("feultype"));
-            CarOwner.setText(c.rs.getString("carowner"));
-            numberplate.setText(c.rs.getString("nplate"));
-            Doip.setText(c.rs.getString("doip"));
-            mil.setText(c.rs.getString("mil"));
-            price.setText(c.rs.getString("price"));
-            loc.setText(c.rs.getString("location"));
-           odate=c.rs.getString("date");
-           status=c.rs.getString("Status");
-            
-             c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Informers where ID='"+iid+"'");
-            c.rs.next();
-            infcombo.getSelectionModel().select(c.rs.getString("name"));
-             c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Seller where ID='"+id.getText()+"'");
-             c.rs.next();
-             SName.setText(c.rs.getString("name"));
-             Pno.setText(c.rs.getString("pno"));
-             add.setText(c.rs.getString("addr"));
-             
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-     
+        CarUpdateModel carupdate=new CarUpdateModel();
+        carupdate.ini1(url, rb, id, infcombo);
+        status=carupdate.ini2(img, id, carname, Model, CarColor, TankCapacity, FuelType, CarOwner, numberplate, Doip, mil, price, loc, odate, status, infcombo, SName, Pno, add);
         save.setOnAction(e->{
-            
+            Boolean isValidated;
+        isValidated = validateCarsInter(Model.getText(),TankCapacity.getText(),mil.getText(),price.getText(),Pno.getText());
+        
+        
+        if(isValidated){
             id.getText();
             String cname=carname.getText();
            String cmodel= Model.getText();
@@ -247,55 +223,11 @@ String status;
            String sadd= add.getText();
            
            String inf=infcombo.getValue();
+           carupdate.ini3(cname, ccolor, cmodel, ctank, cfuel, cowner, cdoip, cmil, cprice, cloc, cplate, odate, status, sname, spno, sadd, inf, b, f, id);
+
            
-            try {
-            c.st=c.con.createStatement();
-          c.rs=c.st.executeQuery("Select * from Informers where Name='"+inf+"'");
-          c.rs.next();
-          String infID=c.rs.getString("id");
-          c.st=c.con.createStatement();
-           
-           c.st.executeUpdate("UPDATE Car SET name='"+cname+"' ,color='"+ccolor+"', model='"+cmodel+"', tank='"+ctank+"', feultype='"+cfuel+"', carowner='"+cowner+"', doip='"+cdoip+"', mil='"+cmil+"', price='"+cprice+"', location='"+cloc+"', nplate='"+cplate+"', date='"+odate+"', informerid='"+infID+"', Status='"+status+"' WHERE ID='"+NewClass.id+"'");
-           c.st=c.con.createStatement();
-           c.st.executeUpdate("UPDATE Seller SET name='"+sname+"', pno='"+spno+"', addr='"+sadd+"' WHERE ID='"+NewClass.id+"'");
-           if(b){
-           
-           
-           try{
-            FileInputStream fis=new FileInputStream(f);
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from imagename");
-            String l="0";
-            while(c.rs.next()){
-                l=c.rs.getString("id");
-            }
-            
-            l=Integer.toString(Integer.parseInt(l)+1);
-            int cursor;
-            String path="resource/"+l+".jpg";
-             FileOutputStream fos=new FileOutputStream(path);
-              while((cursor = fis.read())!=-1){
-            fos.write(cursor);
-          
-        }
-                fis.close();
-            fos.close();
-             c.st=c.con.createStatement();
-            c.st.executeUpdate("INSERT INTO imagename values('"+l+"')");
-               c.st=c.con.createStatement();
-            c.st.executeUpdate("UPDATE Car SET image='"+l+"' WHERE ID='"+Integer.toString(Integer.parseInt(id.getText()))+"'");
-            
-            
-        }catch(Exception exx){
-            exx.printStackTrace();
-        }
-           }
-         } catch (SQLException ex) {
-           ex.printStackTrace();
-         }
-        
            try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -303,7 +235,7 @@ String status;
         Scene scene = new Scene(root);
         NewClass.p.setScene(scene); 
            
-        
+        }
         
         
         });
@@ -386,7 +318,7 @@ File f;
     @FXML
     private void homepaneclick(MouseEvent event) {
           try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -398,7 +330,7 @@ File f;
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -410,7 +342,7 @@ File f;
     @FXML
     private void workerpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -433,7 +365,7 @@ File f;
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -444,7 +376,7 @@ File f;
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -465,7 +397,7 @@ File f;
     @FXML
     private void cancelAct(ActionEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

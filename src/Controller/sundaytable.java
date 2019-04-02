@@ -1,6 +1,6 @@
 package Controller;
 
-import autosaleandpurchasemanagmentsystemfull.*;
+import Controller.*;
 
 
 public class sundaytable {

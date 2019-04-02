@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import com.reportmill.shape.RMDocument;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 
 /**
  * FXML Controller class
@@ -39,7 +40,7 @@ public class ReporController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        File f=new File("C:\\Users\\MAHNOORAFREEN\\Documents\\re.jpg");
+        File f=new File(NewClass.path);
         try {
             FileInputStream fis=new FileInputStream(f);
             Image i=new Image(fis);
@@ -48,13 +49,16 @@ public class ReporController implements Initializable {
             Logger.getLogger(ReporController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        
     }    
 
     @FXML
     private void pdfa(ActionEvent event) {
-         RMDocument rm=new RMDocument(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Myreport.rpt"));
-            RMDocument rep=rm.generateReport(NewClass.r);
-        rep.write("C:\\Users\\MAHNOORAFREEN\\Documents\\re.pdf");
+         RMDocument rm=new RMDocument(getClass().getResource(NewClass.repo));
+            RMDocument rep=rm.generateReport(NewClass.h);
+            FileChooser fs=new FileChooser();
+            String a=fs.showSaveDialog(NewClass.p).getPath();
+        rep.write(a+".pdf");
     }
     
 }

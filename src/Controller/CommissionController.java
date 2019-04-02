@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -60,7 +60,7 @@ public class CommissionController implements Initializable {
     @FXML
     private ScrollPane scr;
     @FXML
-    private ComboBox<String> cb;
+    private ComboBox<String> cb;                          ///njnijkmijkmlmibikmklmlomiomkkp;
      
      connection c2;
      connection c3;
@@ -115,6 +115,8 @@ public class CommissionController implements Initializable {
     private Button minbutton;
     @FXML
     private Label dat;
+    CommisionModel obj = new CommisionModel();
+            
      public void time(){
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), ev -> {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
@@ -164,32 +166,26 @@ public class CommissionController implements Initializable {
         
          c3=new connection();
         c3.connect();
+       String array[]=new String [2];
         try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Commission where type='informer' AND status='Not Paid' and d='n'");
-            
+            obj.ini1();
+           
+              
             String cname="";
             String mname="";
+//  //whileMethod()
+            while(obj.whileMethod()){
+                array=obj.withinWhile(mname,cname,array);
+                mname =array[0];
+                cname=array[1];
+                
             
-            while(c.rs.next()){
-                if(c.rs.getString("type").equals("agent")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from agents where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }else  if(c.rs.getString("type").equals("informer")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from Informers where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }
-                c3.st=c3.con.createStatement();
-                    c3.rs=c3.st.executeQuery("Select * from Car where id='"+c.rs.getString("carID")+"'");
-                    c3.rs.next();
-                    cname=c3.rs.getString("name");
-                    CheckBox cb=new CheckBox();
-                    cb.setOnAction(e->{
-                        
+                   CheckBox cb=new CheckBox();                  //nojijmikmn;
+
+
+                   cb.setOnAction(e->{
+                       
+//                     
                       ObservableList<TableColumn> oll=tv.getColumns();
                       
                      
@@ -205,78 +201,75 @@ public class CommissionController implements Initializable {
                               tcc=oll.get(oll.size()-4);
                              String cc=(String)tcc.getCellData(i);
                              
-                             try{
-                                 c.st=c.con.createStatement();
-                                 c.st.executeUpdate("UPDATE Commission SET status='Paid' WHERE date='"+a+"' AND commission='"+b+"' AND carID='"+cc+"'" );
-                                 System.out.println("Done Updating");
-                                 ddd();
+                             obj.withinwhile2(a, b, cc);
+// withinWhile2();
+// try{
+// c.st=c.con.createStatement();
+// c.st.executeUpdate("UPDATE Commission SET status='Paid' WHERE date='"+a+"' AND commission='"+b+"' AND carID='"+cc+"'" );
+// System.out.println("Done Updating");                   
+//withinWhile2();
+                              try{
+                                ddd();
+                                
                                  
                              }catch(Exception ex){
                                  ex.printStackTrace();
                              }
-                              break;
-                          }}
-                      
-                    
+                             break;
+                        
+//                      
+                 }
+                          }
                     });
-                    ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),cb));
-                
+                   System.out.println(mname+" Current "+cname);
+                   obj.withinWhile3(ol, mname, cname, cb);
             }
-            tv.setItems(ol);
-            tv.getColumns().addAll(name,carname,carID,comm,date,box);
-            scr.setContent(tv);
+//   withinWhile3();
+//    ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),cb));
+//    withiWhile();
+//            }
             
+            tv.setItems(ol);
+            
+            tv.getColumns().addAll(name,carname,carID,comm,date,box);
+            scr.setContent(tv);      
             cb.getItems().addAll("Informers","Agents");
             cb2.getItems().addAll("Not Paid","Paid");
             cb.getSelectionModel().selectFirst();
             cb2.getSelectionModel().selectFirst();
-        }catch(Exception e){
+        }
+        catch(Exception e){
             e.printStackTrace();
         }
     }    
-
     @FXML
     private void cba(ActionEvent event) {
        ddd();
     }
-
     @FXML
     private void cb2a(ActionEvent event) {
        ddd();
     }
-    
     public void ddd(){
         if(cb2.getValue().equals("Paid")){
         if(cb.getSelectionModel().getSelectedItem().equals("Informers")){
             ObservableList<tablecomm> ol=FXCollections.observableArrayList();
               try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Commission where type='informer' AND status='Paid' and d='n'");
-            
+                  obj.ddd1();
+              
+            String arr[]=new String [2];
             String cname="";
             String mname="";
-            
-            while(c.rs.next()){
-                if(c.rs.getString("type").equals("agent")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from agents where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }else  if(c.rs.getString("type").equals("informer")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from Informers where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }
-                c3.st=c3.con.createStatement();
-                    c3.rs=c3.st.executeQuery("Select * from Car where id='"+c.rs.getString("carID")+"'");
-                    c3.rs.next();
-                    cname=c3.rs.getString("name");
-                    
-                    
-                   
-                    ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),new Button("Generate Invoice")));
+            //whil1();
+            while(obj.whil1()){
+                //whil1();
                 
+                obj.ddd2(mname, cname, ol,arr);
+                mname=arr[0];
+                cname=arr[1];
+                
+                
+              
             }
             TableColumn<tablecomm,CheckBox> box=new TableColumn<>("Paid");
         box.setCellValueFactory(new PropertyValueFactory<>("box"));
@@ -284,43 +277,31 @@ public class CommissionController implements Initializable {
             tv.setItems(ol);
             
             tv.getColumns().addAll(name,carname,carID,comm,date);
-          
-            
-            
-            
+       
         }catch(Exception e){
             e.printStackTrace();
         }
-            
-            
-        }else if(cb.getSelectionModel().getSelectedItem().equals("Agents")){
+          
+        }
+        else if(cb.getSelectionModel().getSelectedItem().equals("Agents")){
             ObservableList<tablecomm> ol=FXCollections.observableArrayList();
               try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Commission where type='agent' and status='Paid' and d='n'");
+                  obj.ddd3();
+                  
+                  //ddd3()
+//            c.st=c.con.createStatement();
+//            c.rs=c.st.executeQuery("Select * from Commission where type='agent' and status='Paid' and d='n'");
+            //ddd3();
             
             String cname="";
             String mname="";
-            
-            while(c.rs.next()){
-                if(c.rs.getString("type").equals("agent")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from agents where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }else  if(c.rs.getString("type").equals("informer")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from Informers where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }
-                c3.st=c3.con.createStatement();
-                    c3.rs=c3.st.executeQuery("Select * from Car where id='"+c.rs.getString("carID")+"'");
-                    c3.rs.next();
-                    cname=c3.rs.getString("name");
-                    
-                    ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),new Button("Generate Invoice")));
+           String arr[]=new String[2];
+            while(obj.whil1()){
                 
+                obj.ddd4(mname, cname, ol,arr);
+                mname=arr[0];
+               cname =arr[1];
+              
             }
              tv.getColumns().clear();
             tv.setItems(ol);
@@ -334,36 +315,27 @@ public class CommissionController implements Initializable {
             
             
         }
-    }else if(cb2.getValue().equals("Not Paid")){
+    }
+        else if(cb2.getValue().equals("Not Paid")){
         if(cb.getSelectionModel().getSelectedItem().equals("Informers")){
             ObservableList<tablecomm> ol=FXCollections.observableArrayList();
               try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Commission where type='informer' AND status='Not Paid' and d='n'");
-            
+                  obj.ddd5();
+               
             String cname="";
             String mname="";
+            String arr[]=new String [2];
+            while(obj.whil1()){
+                //ddd6();
+                
+                obj.ddd6(mname, cname,arr);
+               mname=arr[0];
+               cname=arr[1];
             
-            while(c.rs.next()){
-                if(c.rs.getString("type").equals("agent")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from agents where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }else  if(c.rs.getString("type").equals("informer")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from Informers where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }
-                c3.st=c3.con.createStatement();
-                    c3.rs=c3.st.executeQuery("Select * from Car where id='"+c.rs.getString("carID")+"'");
-                    c3.rs.next();
-                    cname=c3.rs.getString("name");
-                     //start
-                    
-                    CheckBox cb=new CheckBox();
-                    cb.setOnAction(e->{
+//             
+//                    
+                   CheckBox cb=new CheckBox();
+                   cb.setOnAction(e->{
                         
                       ObservableList<TableColumn> oll=tv.getColumns();
                       
@@ -372,7 +344,7 @@ public class CommissionController implements Initializable {
                           
                           for(int i=0;i<tv.getItems().size();i++){
                           if(cb==tc.getCellData(i)){
-                              
+                             
                               TableColumn tcc=oll.get(oll.size()-2);
                              String a=(String)tcc.getCellData(i);
                               tcc=oll.get(oll.size()-3);
@@ -381,65 +353,63 @@ public class CommissionController implements Initializable {
                              String cc=(String)tcc.getCellData(i);
                              
                              try{
-                                 c.st=c.con.createStatement();
-                                 c.st.executeUpdate("UPDATE Commission SET status='Paid' WHERE date='"+a+"' AND commission='"+b+"' AND carID='"+cc+"'" );
-                                 System.out.println("Done Updating");
+                                 ///ddd7()
+                             
+                                 obj.ddd7(a, b, cc);
+//                                 c.st=c.con.createStatement();
+//                                 c.st.executeUpdate("UPDATE Commission SET status='Paid' WHERE date='"+a+"' AND commission='"+b+"' AND carID='"+cc+"'" );
+//                                 System.out.println("Done Updating");
+                           ///ddd7
                                  ddd();
                              }catch(Exception ec){
                                  ec.printStackTrace();
                              }
-                             
-                                 
-                             
-                              break;
+//                             
+                            break;
                           }}});
-                    ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),cb));
+                   obj.ddd8(ol, mname, cname, cb);
+                   ///ddd8()
+// ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),cb));
                 
-            }
+            //ddd8()
              tv.getColumns().clear();
             tv.setItems(ol);
           tv.getColumns().addAll(name,carname,carID,comm,date,box);
-            
-            
-            
-        }catch(Exception e){
+                      
+        }
+              }
+                          catch(Exception e){
             e.printStackTrace();
         }
-            
-            
-        }else if(cb.getSelectionModel().getSelectedItem().equals("Agents")){
+                      
+        }
+        else if(cb.getSelectionModel().getSelectedItem().equals("Agents")){
             ObservableList<tablecomm> ol=FXCollections.observableArrayList();
               try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Commission where type='agent' AND status='Not Paid' and d='n'");
+                  obj.ddd9();
+                  
+                  //ddd9()
+          //  c.st=c.con.createStatement();
+          //  c.rs=c.st.executeQuery("Select * from Commission where type='agent' AND status='Not Paid' and d='n'");
+            //ddd9();
             
             String cname="";
             String mname="";
+            String arr[]=new String [2];
+            while(obj.whil1()){
+                
+                obj.ddd10(mname, cname,arr);
+                mname=arr[0];
+                cname=arr[1];
+                
+                
             
-            while(c.rs.next()){
-                if(c.rs.getString("type").equals("agent")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from agents where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }else  if(c.rs.getString("type").equals("informer")){
-                    c2.st=c2.con.createStatement();
-                    c2.rs=c2.st.executeQuery("Select * from Informers where id='"+c.rs.getString("ID")+"'");
-                    c2.rs.next();
-                    mname=c2.rs.getString("name");
-                }
-                c3.st=c3.con.createStatement();
-                    c3.rs=c3.st.executeQuery("Select * from Car where id='"+c.rs.getString("carID")+"'");
-                    c3.rs.next();
-                    cname=c3.rs.getString("name");
-                     //start
                     
                     CheckBox cb=new CheckBox();
                     cb.setOnAction(e->{
                         
                       ObservableList<TableColumn> oll=tv.getColumns();
-                      
-                     
+                                    
                           TableColumn tc=oll.get(oll.size()-1);
                           
                           for(int i=0;i<tv.getItems().size();i++){
@@ -453,35 +423,37 @@ public class CommissionController implements Initializable {
                              String cc=(String)tcc.getCellData(i);
                              
                              try{
-                                 c.st=c.con.createStatement();
-                                 c.st.executeUpdate("UPDATE Commission SET status='Paid' WHERE date='"+a+"' AND commission='"+b+"' AND carID='"+cc+"'" );
-                                 System.out.println("Done Updating");
+                                 obj.ddd11(a, b, cc);
+                                 //ddd11()
+//                                 c.st=c.con.createStatement();
+//                                 c.st.executeUpdate("UPDATE Commission SET status='Paid' WHERE date='"+a+"' AND commission='"+b+"' AND carID='"+cc+"'" );
+//                                 System.out.println("Done Updating"); 
+                  ///ddd11
                                  ddd();
                              }catch(Exception ec){
                                  ec.printStackTrace();
                              }
-                             
-                                 
-                             
-                              break;
+                            break;
                           }}});
-                    ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),cb));
-                
+                    //ddd12()
+                    obj.ddd12(ol, mname, cname, cb);
+     //  ol.add(new tablecomm(mname, cname, c.rs.getString("commission"), c.rs.getString("date"), c.rs.getString("Status"),c.rs.getString("carID"),cb));
+               //ddd12() 
             }
             tv.setItems(ol);
             tv.getColumns().clear();
           tv.getColumns().addAll(name,carname,carID,comm,date,box);
-            
-            
-            
+                        
         }catch(Exception e){
             e.printStackTrace();
         }
             
-            
         }
     }
-    }
+                           }
+    
+                           
+            
 
     @FXML
     private void adw(ActionEvent event) {
@@ -507,11 +479,13 @@ public class CommissionController implements Initializable {
             System.out.println("in");
         if(cb.getValue().equals("Agent")){
             try{
-                c.st=c.con.createStatement();
-                c.rs=c.st.executeQuery("Select * from Agents");
-                
-                while(c.rs.next()){
-                    cb2.getItems().add(c.rs.getString("id")+"  "+c.rs.getString("name"));
+                obj.adw1();
+                //adw1();
+//                c.st=c.con.createStatement();
+//                c.rs=c.st.executeQuery("Select * from Agents");
+                //adw1()
+                while(obj.whil1()){
+                    obj.insideWhile(cb2);
                     
                 }
             }catch(Exception ex){
@@ -520,42 +494,45 @@ public class CommissionController implements Initializable {
             hb.getChildren().add(cb2);
        }else if(cb.getValue().equals("Informer")){
             try{
-                c.st=c.con.createStatement();
-                c.rs=c.st.executeQuery("Select * from Informers");
+                obj.adw2();
+                //adw2()
+//                c.st=c.con.createStatement();
+//                c.rs=c.st.executeQuery("Select * from Informers");
+                //adw2()
                 
-                while(c.rs.next()){
-                    cb2.getItems().add(c.rs.getString("id")+"  "+c.rs.getString("name"));
-                    
-                }
+                obj.adw3(cb2);
+                
+                //adw3()
+//                while(c.rs.next()){
+//                    cb2.getItems().add(c.rs.getString("id")+"  "+c.rs.getString("name"));
+//                    
+//                }
+                //adw3()
             }catch(Exception ex){
                 ex.printStackTrace();
             }
             hb.getChildren().add(cb2);
        }
-        
-        
+                
         });
          
          cb2.setOnAction(e->{
-       
-            try{
-                c.st=c.con.createStatement();
-                c.rs=c.st.executeQuery("Select * from Car WHERE d='n'");
-                
-                while(c.rs.next()){
-                    cb3.getItems().add(c.rs.getString("ID")+" "+c.rs.getString("name"));
-                    
-                }
-                hb.getChildren().add(cb3);
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-          
-   
-        
-       
-        
-        
+             
+             obj.adw4(hb, cb3);
+       //adw4()
+//            try{
+//                c.st=c.con.createStatement();
+//                c.rs=c.st.executeQuery("Select * from Car WHERE d='n'");
+//                
+//                while(c.rs.next()){
+//                    cb3.getItems().add(c.rs.getString("ID")+" "+c.rs.getString("name"));
+//                    
+//                }
+//                hb.getChildren().add(cb3);
+//            }catch(Exception ex){
+//                ex.printStackTrace();
+//            }
+          //adw4()      
         });
          
          cb3.setOnAction(e->{
@@ -579,10 +556,12 @@ public class CommissionController implements Initializable {
              DateFormat df = new SimpleDateFormat("dd/MM/yy");
 Date dateobj = new Date();
         String dat=df.format(dateobj);
-        
-        c.st=c.con.createStatement();
-        c.st.executeUpdate("INSERT INTO Commission values('"+id+"','"+cb.getValue().toLowerCase()+"','"+car+"','"+com+"','Not Paid','"+dat+"','n')");
-            ddd();
+        obj.adw5(id, cb, car, com, dat);
+        //adw5()
+//        c.st=c.con.createStatement();
+//        c.st.executeUpdate("INSERT INTO Commission values('"+id+"','"+cb.getValue().toLowerCase()+"','"+car+"','"+com+"','Not Paid','"+dat+"','n')");
+           //adw5();
+ddd();
             pp.close();
         }catch(Exception ec){
             ec.printStackTrace();
@@ -590,9 +569,7 @@ Date dateobj = new Date();
         
         });
          
-        pp.showAndWait();
-        
-       
+        pp.showAndWait();      
         
     }
 Parent root;
@@ -602,11 +579,12 @@ Parent root;
         
         
         try{
-            c.st=c.con.createStatement();
-            String.format("UPDATE Commission SET d='y' WHERE carID='%s', commission='%s', date='%s', d='n'", tcc.carid,tcc.comm,tcc.date);
-            c.st.executeUpdate(String.format("UPDATE Commission SET d='y' WHERE carID='%s' and commission='%s' and date='%s' and d='n'", tcc.carid,tcc.comm,tcc.date));
+            obj.del(tcc);
+//            c.st=c.con.createStatement();
+//            String.format("UPDATE Commission SET d='y' WHERE carID='%s', commission='%s', date='%s', d='n'", tcc.carid,tcc.comm,tcc.date);
+//            c.st.executeUpdate(String.format("UPDATE Commission SET d='y' WHERE carID='%s' and commission='%s' and date='%s' and d='n'", tcc.carid,tcc.comm,tcc.date));
              try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -675,7 +653,7 @@ Parent root;
     @FXML
     private void homepaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -686,26 +664,23 @@ Parent root;
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
          Scene scene = new Scene(root);
-        NewClass.p.setScene(scene);
-        
+        NewClass.p.setScene(scene);       
     }
-
     @FXML
     private void workerpaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
          Scene scene = new Scene(root);
         NewClass.p.setScene(scene);
     }
-
     @FXML
     private void markpaneexit(MouseEvent event) {
         transformsize(1, 0.3, markico);
@@ -717,22 +692,20 @@ Parent root;
          transformsize(1.5, 0.3, markico);
         marketpane.setStyle("-fx-border-style: solid; -fx-border-radius:5; -fx-border-color:     #539ec9");
     }
-
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
          Scene scene = new Scene(root);
         NewClass.p.setScene(scene);
     }
-
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

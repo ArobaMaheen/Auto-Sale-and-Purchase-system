@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -89,13 +89,13 @@ public class SplashScreenController implements Initializable {
         
         ftt.setToValue(1);
         ftt.play();
-        FadeTransition ft=new FadeTransition(Duration.seconds(5), p);
+        FadeTransition ft=new FadeTransition(Duration.seconds(5));
         
         ft.setToValue(1);
         ft.play();
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), ev -> {
          try {
-            root = FXMLLoader.load(getClass().getResource("DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class SplashScreenController implements Initializable {
     }    
         Parent root;
     private void s(MouseEvent event) throws IOException {
-        Parent root=FXMLLoader.load(getClass().getResource("SplashScreen.fxml"));
+        Parent root=FXMLLoader.load(getClass().getResource("/View/SplashScreen.fxml"));
         //root.setClip(car);
         s.initStyle(StageStyle.TRANSPARENT);
 ss.setFill(Color.TRANSPARENT);

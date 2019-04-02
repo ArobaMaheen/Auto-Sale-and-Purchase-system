@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -220,7 +220,7 @@ Parent root;
     @FXML
     private void homepaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -231,7 +231,7 @@ Parent root;
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -243,7 +243,7 @@ Parent root;
     @FXML
     private void workerpaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -264,7 +264,7 @@ Parent root;
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -274,7 +274,7 @@ Parent root;
     @FXML
     private void sbmouseclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/sundaybazar.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/sundaybazar.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -295,7 +295,7 @@ Parent root;
     @FXML
     private void oamouseclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/oA.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/oA.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -306,7 +306,7 @@ Parent root;
     @FXML
     private void camouseclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/contactagent.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/contactagent.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -317,7 +317,7 @@ Parent root;
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

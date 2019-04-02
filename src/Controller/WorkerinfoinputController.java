@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,6 +43,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  * FXML Controller class
@@ -105,7 +106,7 @@ public class WorkerinfoinputController implements Initializable {
     private ImageView img;
     @FXML
     private Label date;
-
+ WorkerInfiInputModel obj = new WorkerInfiInputModel();
     /**
      * Initializes the controller class.
      */
@@ -116,7 +117,7 @@ public class WorkerinfoinputController implements Initializable {
                     LocalDateTime now = LocalDateTime.now();
                     date.setText(dtf.format(now));
                    
-                    
+                  
     }));
     timeline.setCycleCount(1);
     timeline.play();
@@ -193,7 +194,7 @@ public class WorkerinfoinputController implements Initializable {
     @FXML
     private void homepaneclick(MouseEvent event) {
           try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -205,7 +206,7 @@ public class WorkerinfoinputController implements Initializable {
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -217,7 +218,7 @@ public class WorkerinfoinputController implements Initializable {
     @FXML
     private void workerpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -239,7 +240,7 @@ public class WorkerinfoinputController implements Initializable {
      @FXML
     private void marketpaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -250,7 +251,7 @@ public class WorkerinfoinputController implements Initializable {
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -263,6 +264,15 @@ public class WorkerinfoinputController implements Initializable {
     Parent root;
     @FXML
     private void sve(ActionEvent event) {
+        
+        
+        Boolean isValidated;
+        isValidated = validateWorkersInput(number.getText());
+        
+        
+        if(isValidated){
+        
+            System.out.println("inside");
         String [] emails= {"@gmail.com","@yahoo.com","@rocketmail.com","@hotmail.com","@live.com"};
       String em=email.getText();
       Boolean val=false;
@@ -301,34 +311,18 @@ Boolean b=true;
                ex.printStackTrace();
             }
             if(b){
-            c.st=c.con.createStatement();
-            c.ps=c.con.prepareStatement("INSERT INTO "+worktypemenu.getValue()+" VALUES(?,?,?,?,?,?,?,?,?)");
-           c.ps.setString(1, n);
-           c.ps.setString(2, no);
-           c.ps.setString(3, cnic);
-           c.ps.setString(4, ad);
-           c.ps.setString(5, em);
-           c.ps.setString(6, z);
-           c.ps.setString(7, date);
-           c.ps.setString(8, "n");
-          
-           c.ps.setBytes(9, image);}else{
-                c.st=c.con.createStatement();
-            c.ps=c.con.prepareStatement("INSERT INTO "+worktypemenu.getValue()+" VALUES(?,?,?,?,?,?,?,?,?)");
-           c.ps.setString(1, n);
-           c.ps.setString(2, no);
-           c.ps.setString(3, cnic);
-           c.ps.setString(4, ad);
-           c.ps.setString(5, em);
-           c.ps.setString(6, z);
-           c.ps.setString(7, date);
-            c.ps.setString(8, "n");
-                c.ps.setNull(9, java.sql.Types.BINARY);
+                
+            obj.ifstatement(worktypemenu, n, no, cnic, ad, em, z, date, image);
+             
+
             }
-           c.ps.executeUpdate();
-         //   c.st.executeUpdate("Insert into "+worktypemenu.getValue()+" (name,pno,cnic,startdate,addr,zone,email,d) values('"+n+"','"+no+"','"+cnic+"','"+date+"','"+ad+"','"+z+"','"+em+"','n')");
-             try {
-            root = FXMLLoader.load(getClass().getResource("worker.fxml"));
+            else{
+                obj.elsestatement(worktypemenu, n, no, cnic, ad, em, z, date, image);
+            
+  
+            }
+            try {
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -342,7 +336,35 @@ Boolean b=true;
           ev.setVisible(true);
           
       }
+        }
     }
+    public boolean validateWorkersInput(String PNo){
+       
+         if( validateForInt(PNo)){
+             return true;
+         }else{
+             return false;
+         }
+         
+    
+        
+    }
+    
+    public Boolean validateForInt(String toBeValidated){
+        
+        boolean isValid=true;
+        
+        try{
+           Long.parseLong(toBeValidated);
+        }catch(Exception e){
+            isValid=false;
+            JOptionPane.showMessageDialog(null, "The Value You Entered : "+toBeValidated+" Is Not A Valid Value. Please Enter Valid Value");
+        }
+        return isValid;
+    }
+    
+    
+    
 File f;
     @FXML
     private void imac(MouseEvent event) {
@@ -363,7 +385,7 @@ private Label ev;
     @FXML
     private void cenbtn(ActionEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

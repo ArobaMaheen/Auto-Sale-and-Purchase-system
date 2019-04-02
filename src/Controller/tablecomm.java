@@ -1,6 +1,6 @@
 package Controller;
 
-import autosaleandpurchasemanagmentsystemfull.*;
+import Controller.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 
@@ -9,10 +9,10 @@ public class tablecomm {
     
     String name;
     String carname;
-    String comm;
-    String date;
+   public  String comm;
+   public  String date;
     String status;
-    String carid;
+   public String carid;
     CheckBox box;
     Button b;
 

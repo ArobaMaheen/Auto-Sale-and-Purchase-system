@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import javax.swing.JOptionPane;
 
 /**
  * FXML Controller class
@@ -98,6 +99,8 @@ public void time(){
     @FXML
     private Button minbutton;
     
+    SundayBazarAddModel obj = new SundayBazarAddModel();
+            
     /**
      * Initializes the controller class.
      */
@@ -105,25 +108,34 @@ public void time(){
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         time();
-        c.connect();
+       // c.connect();
+       
+       obj.ini(car);
+       
         
-        try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where status='pur' and d='n'");
-            
-            while(c.rs.next()){
-                car.getItems().add(c.rs.getString("ID")+"- "+c.rs.getString("name"));
-            }
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }    
 Parent root;
     @FXML
     private void save(ActionEvent event) {
+        
+        
+        boolean isValid=true;
+        
+        try{
+           Long.parseLong(charges.getText());
+        }catch(Exception e){
+            isValid=false;
+            JOptionPane.showMessageDialog(null, "The Value You Entered : "+charges.getText()+" Is Not A Valid Value. Please Enter Valid Value");
+        }
+        
+        if(isValid){
         String com=charges.getText();
-        String id=Character.toString(car.getValue().charAt(0));
+        int ii=0;
+        String id="";
+        while(car.getValue().charAt(ii)!='-'){
+        id+=Character.toString(car.getValue().charAt(ii));
+        ii++;
+        }
         String name="";
         
         for(int i=3;i<car.getValue().length();i++){
@@ -132,14 +144,15 @@ Parent root;
         System.out.println(name);
         
         try{
-            c.st=c.con.createStatement();
-             DateFormat df = new SimpleDateFormat("dd/MM/yy");
-Date dateobj = new Date();
-        String d=df.format(dateobj);
-            c.st.executeUpdate("INSERT INTO SundayBazaar values('"+id+"','"+name+"','"+d+"','"+com+"','n')");
+            obj.save(id, name, com);
+//            c.st=c.con.createStatement();
+//             DateFormat df = new SimpleDateFormat("dd/MM/yy");
+//Date dateobj = new Date();
+//        String d=df.format(dateobj);
+//            c.st.executeUpdate("INSERT INTO SundayBazaar values('"+id+"','"+name+"','"+d+"','"+com+"','n')");
             
               try {
-            root = FXMLLoader.load(getClass().getResource("sundaybazar.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/sundaybazar.fxml"));
         } catch (IOException ex) {
            ex.printStackTrace();
         }
@@ -148,7 +161,7 @@ Date dateobj = new Date();
         }catch(Exception e){
             e.printStackTrace();
         }
-        
+        }
     }
 
     @FXML
@@ -209,7 +222,7 @@ Date dateobj = new Date();
     @FXML
     private void homepaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -220,7 +233,7 @@ Date dateobj = new Date();
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -232,7 +245,7 @@ Date dateobj = new Date();
     @FXML
     private void workerpaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -253,7 +266,7 @@ Date dateobj = new Date();
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -272,7 +285,7 @@ Date dateobj = new Date();
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

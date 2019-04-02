@@ -1,6 +1,6 @@
 package Controller;
 
-import autosaleandpurchasemanagmentsystem.Views.*;
+import Controller.*;
 import javafx.scene.control.Button;
 
 

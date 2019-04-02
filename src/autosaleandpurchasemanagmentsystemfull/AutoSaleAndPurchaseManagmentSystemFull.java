@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package autosaleandpurchasemanagmentsystemfull;
-
+import Controller.*;
+import autosaleandpurchasemanagmentsystemfull.*;
+import autosaleandpurchasemanagmentsystemfull.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +31,8 @@ public class AutoSaleAndPurchaseManagmentSystemFull extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         System.gc();
-          root = FXMLLoader.load(getClass().getResource("SplashScreen.fxml"));
+          root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
+                 
         s=stage;
         s.initStyle(StageStyle.UNDECORATED);
         Scene scene = new Scene(root);

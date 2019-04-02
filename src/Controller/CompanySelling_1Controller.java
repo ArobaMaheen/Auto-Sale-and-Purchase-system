@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -126,6 +126,8 @@ public class CompanySelling_1Controller implements Initializable {
     private Label date;
     @FXML
     private ImageView img;
+    
+    CompanySellng_1Model obj =new CompanySellng_1Model();
     public void time(){
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), ev -> {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
@@ -144,32 +146,9 @@ public class CompanySelling_1Controller implements Initializable {
         time();
           c=new connection();
         c.connect();
-        try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where ID='"+NewClass.id+"' and d='n'");
-            
-            c.rs.next();
-            
-            String name=c.rs.getString("name");
-            String year=c.rs.getString("model");
-            String price=c.rs.getString("price");
-            
-            String mil=c.rs.getString("mil");
-            
-            this.carname.setText(name);
-            this.carid.setText(NewClass.id);
-            this.carprice.setText(price);
-            this.manu.setText(mil);
-            this.caryear.setText(year);
-            
-            
-            
-            
-           
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        obj.ini(carname, carid, carprice, manu, caryear);
         
+       
         
     }
     Parent root;
@@ -181,62 +160,22 @@ byte[] image;
         String badd=BuyerAddress.getText();
         String bpno=BuyerPhoneNo.getText();
         
-        try{
-            c.st=c.con.createStatement();
-             DateFormat df = new SimpleDateFormat("dd/MM/yy");
-Date dateobj = new Date();
-        String date=df.format(dateobj);
-            c.st.executeUpdate("UPDATE Car SET Status='sold', date='"+date+"' where ID='"+NewClass.id+"'");
-            
-             c.st=c.con.createStatement();
-            c.st.executeUpdate("INSERT INTO Buyer values('"+bname+"','"+bpno+"','"+badd+"','"+bcnic+"',null,'"+NewClass.id+"')");
-      /*       boolean b=true;
-            try {
-                 image = new byte[(int) f.length()];
-                FileInputStream in = new FileInputStream(f);
-                
-                in.read(image);
-            } catch (Exception ex) {
-                b=false;
-                
-               ex.printStackTrace();
-            }
-            if(b){
-                 c.st=c.con.createStatement();
-            c.ps=c.con.prepareStatement("UPDATE Buyer SET image=? WHERE ID='"+NewClass.id+"'");
-            c.ps.setBytes(1, image);
-            c.ps.executeUpdate();
-            }*/
+        try{// save();
+            obj.save(bname, bpno, badd, bcnic);
+//     
+        
       
+      
+//       img(); 
         try{
-            FileInputStream fis=new FileInputStream(f);
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from imagename");
-            String l="0";
-            while(c.rs.next()){
-                l=c.rs.getString("id");
-            }
-            
-            l=Integer.toString(Integer.parseInt(l)+1);
-            int cursor;
-            String path="resource/"+l+".jpg";
-             FileOutputStream fos=new FileOutputStream(path);
-              while((cursor = fis.read())!=-1){
-            fos.write(cursor);
-          
+          obj.img(f);
+//        
+        }  
+        catch(Exception e){
+            e.printStackTrace();
         }
-                fis.close();
-            fos.close();
-             c.st=c.con.createStatement();
-            c.st.executeUpdate("INSERT INTO imagename values('"+l+"')");
-               c.st=c.con.createStatement();
-            c.st.executeUpdate("UPDATE Buyer SET image='"+l+"' WHERE ID='"+NewClass.id+"'");
-            
-            
-        }catch(Exception exx){
-            exx.printStackTrace();
-        }
-             root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+// img();
+             root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
              Scene s=new Scene(root);
              NewClass.p.setScene(s);
         }catch(Exception e){
@@ -247,7 +186,7 @@ Date dateobj = new Date();
     @FXML
     private void cancelac(ActionEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -313,7 +252,7 @@ Date dateobj = new Date();
     @FXML
     private void homepaneclick(MouseEvent event) {
           try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -325,7 +264,7 @@ Date dateobj = new Date();
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -337,7 +276,7 @@ Date dateobj = new Date();
     @FXML
     private void workerpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -360,7 +299,7 @@ Date dateobj = new Date();
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -371,7 +310,7 @@ Date dateobj = new Date();
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

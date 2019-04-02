@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Controller;
-import autosaleandpurchasemanagmentsystemfull.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,7 +47,7 @@ Parent root;
       NewClass.pp.setEffect(gaussianBlur);
       
         try {
-            root = FXMLLoader.load(getClass().getResource("contactagent.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/contactagent.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

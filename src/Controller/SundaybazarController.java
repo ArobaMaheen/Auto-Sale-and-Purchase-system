@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,6 +38,7 @@ import javafx.util.Duration;
  */
 public class SundaybazarController implements Initializable {
 
+    SundayBazarModel obj = new SundayBazarModel();
     @FXML
     private Pane dashboard;
     @FXML
@@ -101,25 +102,9 @@ public class SundaybazarController implements Initializable {
         
         TableColumn<sundaytable,String> charges=new TableColumn<>("Charges");
         charges.setCellValueFactory(new PropertyValueFactory<>("charges"));
-        c=new connection();
-        c.connect();
-        try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from SundayBazaar where d='n'");
-            ObservableList<sundaytable> ol=FXCollections.observableArrayList();
-            while(c.rs.next()){
-                ol.add(new sundaytable(c.rs.getString("carid"),c.rs.getString("carname"),c.rs.getString("date"),c.rs.getString("charge")));
-            }
-            tv=new TableView();
-            tv.setItems(ol);
-            tv.getColumns().addAll(carid,carname,date,charges);
-           scr.setContent(tv);
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
         
-        
+        obj.ini1(tv, scr, carid, carname, date, charges);
+   
     }    
     @FXML
     private void homepaneexit(MouseEvent event) {
@@ -179,7 +164,7 @@ Parent root;
     @FXML
     private void homepaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -190,7 +175,7 @@ Parent root;
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -202,7 +187,7 @@ Parent root;
     @FXML
     private void workerpaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -223,7 +208,7 @@ Parent root;
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -233,7 +218,7 @@ Parent root;
     @FXML
     private void sbmouseclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/sundaybazar.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/sundaybazar.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -254,7 +239,7 @@ Parent root;
     @FXML
     private void oamouseclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/oA.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/oA.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -265,7 +250,7 @@ Parent root;
     @FXML
     private void camouseclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/contactagent.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/contactagent.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -276,7 +261,7 @@ Parent root;
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -287,7 +272,7 @@ Parent root;
     @FXML
     private void ad(ActionEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("sundaybazaradd.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/sundaybazaradd.fxml"));
         } catch (IOException ex) {
            ex.printStackTrace();
         }
@@ -304,21 +289,16 @@ Parent root;
         String id=ee.carid;
         String a=ee.charges;
         String d=ee.date;
-        
-        
-        try{
-            c.st=c.con.createStatement();
-            c.st.executeUpdate("UPDATE SundayBazaar SET d='y' where carid='"+id+"' and charge='"+a+"' and date='"+d+"'");
-            
-              
-        
-        
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        obj.delete1(id, a, d);
+//       try{
+//            c.st=c.con.createStatement();
+//            c.st.executeUpdate("UPDATE SundayBazaar SET d='y' where carid='"+id+"' and charge='"+a+"' and date='"+d+"'");
+//     
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/sundaybazar.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/sundaybazar.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

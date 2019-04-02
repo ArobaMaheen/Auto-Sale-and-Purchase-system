@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -93,6 +93,8 @@ public class DashbaordDesignController implements Initializable {
     private Label workl;
     @FXML
     private Label compkr;
+    
+    DashBoardDesignModel obj =new DashBoardDesignModel();
     public void time(){
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.01), ev -> {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
@@ -122,102 +124,71 @@ public class DashbaordDesignController implements Initializable {
                      time.play();
     }
     connection c;
-    int total=0;
-    int cartotal=0;
+    int total;
+    int cartotal;
     int ass=0;
     int pur=0;
     int sold=0;
+    int totall;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         time();
        
-              
-        c=new connection();
-       c.connect();
-       try{
-           c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Informers WHERE d='n'");
-           while(c.rs.next()){
-               total++;
-           }
-           c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Agents WHERE d='n'");
-           while(c.rs.next()){
-               total++;
-           }
-           c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Mechanic WHERE d='n'");
-           while(c.rs.next()){
-               total++;
-           }
-       }catch(Exception e){
-           e.printStackTrace();
-       }
+        
+     //   c=new connection();
+     //   c.connect();
+        try{
+    
+     total = obj.ini1();
+  
+       //ini();
+        
+        cartotal=  obj.ini2();
        
-       try{
-           c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Car WHERE d='n' and status='pur'");
-           while(c.rs.next()){
-               cartotal++;
-           }
-       }catch(Exception e){
-           e.printStackTrace();
-       }
-       try{
-           System.out.println("insise");
-           c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Commission WHERE d='n' and status='Not Paid'");
-           while(c.rs.next()){
-               System.out.println(totall);
-               totall+=Integer.parseInt(c.rs.getString("commission"));
-           }
-       }catch(Exception e){
-            e.printStackTrace();
-       }
+       
+       
+         
+     totall=obj.ini3();
+
+
+
+
        compkr.setText(Integer.toString(totall)+" pkr");
        carl.setText(Integer.toString(cartotal));
         workl.setText(Integer.toString(total));
         
-        try{
-            c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Car WHERE d='n' and status='Assessed'");
-            while(c.rs.next()){
-                ass++;
-            }
-            
-             c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Car WHERE d='n' and status='pur'");
-            while(c.rs.next()){
-                pur++;
-            }
-            
-             c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Car WHERE d='n' and status='sold'");
-            while(c.rs.next()){
-                sold++;
-            }
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        
+        int[] arr=obj.ini4();
+        ass=arr[0];
+        pur=arr[1];
+        sold=arr[2];
+      
+
+              
               ObservableList<PieChart.Data> pieChartData = 
                 FXCollections.observableArrayList(
-                    new PieChart.Data("Assessed Cars", ass),
+        
+                        new PieChart.Data("Assessed Cars", ass),
                     new PieChart.Data("Purchased Cars", pur),
                     new PieChart.Data("Sold Cars", sold)
                     //new PieChart.Data("Customers", 50)
                     );
                                
-         
+//         
         piechart.setTitle("Cars Records");
         piechart.setData(pieChartData); 
         piechart();
-        
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+//ini1()
     }    
     
    
-int totall=0;
+
     @FXML
     private void homepaneexit(MouseEvent event) {
        
@@ -236,6 +207,7 @@ int totall=0;
     }
 
     @FXML
+    
     private void carpmouseenter(MouseEvent event) {
         transformsize(1.5, 0.3, carico);
         carpane.setStyle("-fx-border-style: solid; -fx-border-radius:5; -fx-border-color:     #539ec9");
@@ -275,7 +247,7 @@ int totall=0;
     @FXML
     private void homepaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -286,7 +258,7 @@ int totall=0;
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -298,7 +270,7 @@ int totall=0;
     @FXML
     private void workerpaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -321,7 +293,7 @@ int totall=0;
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -332,7 +304,7 @@ int totall=0;
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -353,7 +325,7 @@ int totall=0;
     @FXML
     private void cardashclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -364,7 +336,7 @@ int totall=0;
     @FXML
     private void wdashclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -375,7 +347,7 @@ int totall=0;
     @FXML
     private void tcdashclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

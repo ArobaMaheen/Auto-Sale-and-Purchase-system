@@ -1,11 +1,11 @@
 package Controller;
 
-import text.*;
+import Controller.*;
 
 
 public class worktable {
     String name;
-    String id;
+    public String id;
     String cnic;
     String pno;
     String add;

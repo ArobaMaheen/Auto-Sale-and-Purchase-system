@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-
-import autosaleandpurchasemanagmentsystemfull.*;
+import Model.*;
+import Controller.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -58,6 +58,9 @@ import javax.mail.internet.MimeMessage;
  */
 public class contactagentController implements Initializable {
 
+    
+    ContactAgentModel obj=new ContactAgentModel();
+            
     @FXML
     public Pane dashboard;
     @FXML
@@ -158,17 +161,12 @@ public class contactagentController implements Initializable {
        addr.setCellValueFactory(new PropertyValueFactory<>("addr"));
        
        ObservableList ol=FXCollections.observableArrayList();
-       
-       c.connect();
-       
        try{
-           c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Agents");
-           
-           while(c.rs.next()){
-               ol.add(new contacttable(c.rs.getString("name"),c.rs.getString("ID"),c.rs.getString("cnic"),c.rs.getString("addr"),c.rs.getString("pno"),c.rs.getString("zone"),c.rs.getString("email"),c.rs.getString("startdate")));
-           }
-           
+           obj.ini1(ol);
+       
+
+
+
            tv.setItems(ol);
            tv.getColumns().addAll(id,name,email,pno,zone,date,addr,cnic);
            scr.setContent(tv);
@@ -177,25 +175,10 @@ public class contactagentController implements Initializable {
            e.printStackTrace();
        }
        
-       c.connect();
+       obj.ini2(selectcar, selectpurpose);
        
-       try{
-           c.st=c.con.createStatement();
-           c.rs=c.st.executeQuery("Select * from Car where Status='pur' and d='n'");
-           
-           while(c.rs.next()){
-               selectcar.getItems().add(c.rs.getString("ID")+"- "+c.rs.getString("name"));
-           }
-           selectcar.getSelectionModel().selectFirst();
-           
-           selectpurpose.getItems().addAll("Send Details Of Car","Request");
-           selectpurpose.getSelectionModel().selectFirst();
-       }catch(Exception e){
-           e.printStackTrace();
-       }
        
-        
-        
+       
         
         
         
@@ -216,7 +199,7 @@ public class contactagentController implements Initializable {
         st.play();              
         tt.setToX(350); 
         tt.play();
-        Parent root=FXMLLoader.load(getClass().getResource("emailconfirmation.fxml"));
+        Parent root=FXMLLoader.load(getClass().getResource("/View/emailconfirmation.fxml"));
         Scene sc=new Scene(root);
         Stage sat=new Stage();
         sat.setScene(sc);
@@ -277,29 +260,37 @@ public class contactagentController implements Initializable {
         String opass="";
         System.out.println(ol.get(0).email);
         
-        try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Owner");
-            c.rs.next();
-            
-            oemail=c.rs.getString("email");
-            opass=c.rs.getString("password");
-            System.out.println(opass);
-            System.out.println(oemail);
+       String a[]= obj.sendbtnclick(oemail, opass, ol);
+       oemail=a[0];
+       opass=a[1];
+       
+       obj.sendbtnclick(oemail, opass, ol);
+    
+try{
             for(int i=0 ; i<ol.size();i++){
                 sendmail(oemail,opass,ol.get(i).email);
             }
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-       // sendmail();
+}
+catch(Exception e)
+{
+   e.printStackTrace();
+}
+   
+    
+//            
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        
+        
+       // sendbtnclick();
         transitionetc();
         
         
         
         
     }
+    
 
     @FXML
     private void homepaneexit(MouseEvent event) {
@@ -359,7 +350,7 @@ Parent root;
     @FXML
     private void homepaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -370,7 +361,7 @@ Parent root;
     @FXML
     private void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -382,7 +373,7 @@ Parent root;
     @FXML
     private void workerpaneclick(MouseEvent event) {
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -403,7 +394,7 @@ Parent root;
     @FXML
     private void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -430,40 +421,62 @@ Parent root;
 
     @FXML
     private void bb(ActionEvent event) {
-        String car=Character.toString(selectcar.getValue().charAt(0));
+        int i=0;
+        String car="";
+        while(selectcar.getValue().charAt(i)!='-'){
+         car+=Character.toString(selectcar.getValue().charAt(i));
+         i++;
+        }
         String pur=selectpurpose.getValue();
         String mes="";
+        String generate="";
         try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where ID='"+car+"'");
             
-            c.rs.next();
+            obj.bb1(car);
+            //bb1()
+            
+//            c.st=c.con.createStatement();
+//            c.rs=c.st.executeQuery("Select * from Car where ID='"+car+"'");
+//            
+//            c.rs.next();
+         //bb1();
             if(pur.equals("Send Details Of Car")){
-            mes="/*GENERATED MESSAGE*/\n\n"
-                    + "Car ID   =   "+c.rs.getString("ID")+"\n"
-                    + "Car Name   =   "+c.rs.getString("name")+"\n"
-                    + "Car Color   =   "+c.rs.getString("color")+"\n"
-                    + "Car Model   =   "+c.rs.getString("model")+"\n"
-                    + "Car Tank   =   "+c.rs.getString("tank")+"\n"
-                    + "Car Feul   =   "+c.rs.getString("feultype")+"\n"
-                    + "Car Date Of Purchase   =   "+c.rs.getString("doip")+"\n"
-                    + "Car Milleage   =   "+c.rs.getString("mil")+"\n"
-                    + "Car Price   =   "+c.rs.getString("price")+"\n"
-                    + "Car Location   =   "+c.rs.getString("location")+"\n"
-                    + "Car NumberPlate   =   "+c.rs.getString("nplate")+"\n"
-                    + "Car Date Added   =   "+c.rs.getString("date")+"\n\n"
-                    + "Please Find Buyer For This Car\nThankYou\n\n"
-                    + "/*GENERATED MESSAGE*/";
-            }else if(pur.equals("Request")){
-               mes="/*GENERATED MESSAGE*/\n\n"
-                    + "Car ID   =   "+c.rs.getString("ID")+"\n"
-                    + "Car Name   =   "+c.rs.getString("name")+"\n"
-                    + "Car Color   =   "+c.rs.getString("color")+"\n"
-                    + "Car Model   =   "+c.rs.getString("model")+"\n\n"
-                    + "Any Buyer Found For This Car?\n\n"
-                    + "/*GENERATED MESSAGE*/";
+                generate=obj.bb2(mes);
+                //bb2();
+                
+//            mes="/*GENERATED MESSAGE*/\n\n"
+//                    + "Car ID   =   "+c.rs.getString("ID")+"\n"
+//                    + "Car Name   =   "+c.rs.getString("name")+"\n"
+//                    + "Car Color   =   "+c.rs.getString("color")+"\n"
+//                    + "Car Model   =   "+c.rs.getString("model")+"\n"
+//                    + "Car Tank   =   "+c.rs.getString("tank")+"\n"
+//                    + "Car Feul   =   "+c.rs.getString("feultype")+"\n"
+//                    + "Car Date Of Purchase   =   "+c.rs.getString("doip")+"\n"
+//                    + "Car Milleage   =   "+c.rs.getString("mil")+"\n"
+//                    + "Car Price   =   "+c.rs.getString("price")+"\n"
+//                    + "Car Location   =   "+c.rs.getString("location")+"\n"
+//                    + "Car NumberPlate   =   "+c.rs.getString("nplate")+"\n"
+//                    + "Car Date Added   =   "+c.rs.getString("date")+"\n\n"
+//                    + "Please Find Buyer For This Car\nThankYou\n\n"
+//                    + "/*GENERATED MESSAGE*/";
+           
+                 //bb2();
             }
-           messtextarea.setText(mes);
+            else if(pur.equals("Request")){
+                
+               generate= obj.bb3(mes);
+                //bb3();
+//               mes="/*GENERATED MESSAGE*/\n\n"
+//                    + "Car ID   =   "+c.rs.getString("ID")+"\n"
+//                    + "Car Name   =   "+c.rs.getString("name")+"\n"
+//                    + "Car Color   =   "+c.rs.getString("color")+"\n"
+//                    + "Car Model   =   "+c.rs.getString("model")+"\n\n"
+//                    + "Any Buyer Found For This Car?\n\n"
+//                    + "/*GENERATED MESSAGE*/";
+               //bb3();
+            }
+            System.out.println(generate+"  asdasd ");
+           messtextarea.setText(generate);
         }catch(Exception e){
             
         }
@@ -482,7 +495,7 @@ Parent root;
     @FXML
     private void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

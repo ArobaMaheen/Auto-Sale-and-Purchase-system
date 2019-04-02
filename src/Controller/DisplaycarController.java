@@ -4,10 +4,8 @@
  * and open the template in the editor.
  */
 package Controller;
-import autosaleandpurchasemanagmentsystem.Views.*;
-import autosaleandpurchasemanagmentsystemfull.NewClass;
-import autosaleandpurchasemanagmentsystemfull.Recipt;
-import autosaleandpurchasemanagmentsystemfull.connection;
+import Model.*;
+import Controller.*;
 import com.reportmill.shape.RMDocument;
 import java.io.IOException;
 import java.net.URL;
@@ -140,52 +138,9 @@ TableView tv=new TableView<>();
        b.setCellValueFactory(new PropertyValueFactory<>("b"));
        b.setMinWidth(115);
         ObservableList<tablecar> ol= FXCollections.observableArrayList();
-        try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where Status='assessed' and d='n'");
-            while(c.rs.next()){
-                Button but=new Button("Purchase");
-                but.setStyle("-fx-background-color:  #1F3E50;-fx-text-fill:white;");
-                
-                but.setOnMouseEntered(ex->{
-                    but.setStyle("-fx-background-color:#6CBBD9;-fx-text-fill:white;");
-                });
-                but.setOnMouseExited(ex->{
-                    but.setStyle("-fx-background-color:#1F3E50;-fx-text-fill:white;");
-                });
-                but.setOnAction(e->{
-                    System.out.println("in");
-                    ObservableList<TableColumn> oll=tv.getColumns();
-                      
-                     
-                          TableColumn tc=oll.get(oll.size()-1);
-                          
-                          for(int i=0;i<tv.getItems().size();i++){
-                              System.out.println("in loop");
-                          if(but==tc.getCellData(i)){
-                              System.out.println("in if");
-                              TableColumn tcc=oll.get(oll.size()-6);
-                            
-                             String cc=(String)tcc.getCellData(i);
-                             NewClass.id=cc;
-                                  try {
-                                      root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/CompanyBuying.fxml"));
-                                  } catch (IOException ex) {
-                                     ex.printStackTrace();
-                                  }
-                                  Scene s=new Scene(root);
-                                  NewClass.p.setScene(s);
-                              System.out.println(cc);
-                             break;
-                          }
-                
-                
-                }});
-                ol.add(new tablecar(c.rs.getString("id"),c.rs.getString("name"),c.rs.getString("model"),c.rs.getString("color"),c.rs.getString("price"),but));
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        DisplayCarModel  obj=new DisplayCarModel ();
+        tv=obj.ini1(tv, ol, root);
+     
         tv.setItems(ol);
         tv.getColumns().addAll(id,name,year,color,price,b);
         tv.setMinWidth(707);
@@ -197,206 +152,20 @@ TableView tv=new TableView<>();
         {
             if(cat.getValue().equals("Assessed Cars")){
                 tv.getItems().clear();
-                try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where Status='assessed' and d='n'");
-            
-            while(c.rs.next()){
-                Button but=new Button("Purchase");
-                but.setStyle("-fx-background-color:  #1F3E50;-fx-text-fill:white;");
-                
-                but.setOnMouseEntered(ex->{
-                    but.setStyle("-fx-background-color:#6CBBD9;-fx-text-fill:white;");
-                });
-                but.setOnMouseExited(ex->{
-                    but.setStyle("-fx-background-color:#1F3E50;-fx-text-fill:white;");
-                });
-                but.setOnAction(ex->{
-                    System.out.println("in");
-                    ObservableList<TableColumn> oll=tv.getColumns();
-                      
-                     
-                          TableColumn tc=oll.get(oll.size()-1);
-                          
-                          for(int i=0;i<tv.getItems().size();i++){
-                              System.out.println("in loop");
-                          if(but==tc.getCellData(i)){
-                              System.out.println("in if");
-                              TableColumn tcc=oll.get(oll.size()-6);
-                            
-                             String cc=(String)tcc.getCellData(i);
-                             NewClass.id=cc;
-                                  try {
-                                      root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/CompanyBuying.fxml"));
-                                  } catch (IOException exp) {
-                                     exp.printStackTrace();
-                                  }
-                                  Scene s=new Scene(root);
-                                  NewClass.p.setScene(s);
-                              System.out.println(cc);
-                             break;
-                          }
-                
-                             
-                }});
-                ol.add(new tablecar(c.rs.getString("id"),c.rs.getString("name"),c.rs.getString("model"),c.rs.getString("color"),c.rs.getString("price"),but));
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+          
+            obj.ini2(tv,ol);
         tv.setItems(ol);
-            }else if(cat.getValue().equals("Purchased Cars")){
-                tv.getItems().clear();
-                  try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where Status='pur' and d='n'");
-            while(c.rs.next()){
-                 Button but=new Button("Sell");
-                 but.setStyle("-fx-background-color:  #1F3E50;-fx-text-fill:white;");
-                
-                but.setOnMouseEntered(ex->{
-                    but.setStyle("-fx-background-color:#6CBBD9;-fx-text-fill:white;");
-                });
-                but.setOnMouseExited(ex->{
-                    but.setStyle("-fx-background-color:#1F3E50;-fx-text-fill:white;");
-                });
-                but.setOnAction(ex->{
-                    System.out.println("in");
-                    ObservableList<TableColumn> oll=tv.getColumns();
-                      
-                     
-                          TableColumn tc=oll.get(oll.size()-1);
-                          
-                          for(int i=0;i<tv.getItems().size();i++){
-                              System.out.println("in loop");
-                          if(but==tc.getCellData(i)){
-                              System.out.println("in if");
-                              TableColumn tcc=oll.get(oll.size()-6);
-                            
-                             String cc=(String)tcc.getCellData(i);
-                             NewClass.id=cc;
-                                  try {
-                                      root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/CompanySelling_1.fxml"));
-                                  } catch (IOException exp) {
-                                     exp.printStackTrace();
-                                  }
-                                  Scene s=new Scene(root);
-                                  NewClass.p.setScene(s);
-                              System.out.println(cc);
-                             break;
-                          }
-                 
-                
-                }});
-                ol.add(new tablecar(c.rs.getString("id"),c.rs.getString("name"),c.rs.getString("model"),c.rs.getString("color"),c.rs.getString("price"),but));
             }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+            else if(cat.getValue().equals("Purchased Cars")){
+                tv.getItems().clear();
+                
+                obj.ini3(tv, ol);
+            
         tv.setItems(ol);
             }else if(cat.getValue().equals("Sold Cars")){
                 tv.getItems().clear();
-                  try{
-            c.st=c.con.createStatement();
-            c.rs=c.st.executeQuery("Select * from Car where Status='sold' and d='n'");
-            
-            
-            while(c.rs.next()){
-                 Button but=new Button("Generate Invoice");
-            
-            but.setStyle("-fx-background-color:  #1F3E50;-fx-text-fill:white;");
-                
-                but.setOnMouseEntered(ex->{
-                    but.setStyle("-fx-background-color:#6CBBD9;-fx-text-fill:white;");
-                });
-                but.setOnMouseExited(ex->{
-                    but.setStyle("-fx-background-color:#1F3E50;-fx-text-fill:white;");
-                });
-                
-                but.setOnAction((event) -> {
-                     System.out.println("in");
-                    ObservableList<TableColumn> oll=tv.getColumns();
-                      
-                     
-                          TableColumn tc=oll.get(oll.size()-1);
-                          
-                          for(int i=0;i<tv.getItems().size();i++){
-                              System.out.println("in loop");
-                          if(but==tc.getCellData(i)){
-                              System.out.println("in if");
-                              TableColumn tcc=oll.get(oll.size()-6);
-                            
-                             String cc=(String)tcc.getCellData(i);
-                             NewClass.id=cc;
-                                  //after id
-                                  try{
-                                      c.st=c.con.createStatement();
-                                      c.rs=c.st.executeQuery("Select * from Buyer where ID='"+NewClass.id+"'");
-                                      c.rs.next();
-                                      
-                                       String bname=c.rs.getString("name");
-                                        String bcnic=c.rs.getString("cnic");
-                            String baddr=c.rs.getString("addr");
-                            String bno=c.rs.getString("pno");
-                             c.st=c.con.createStatement();
-                                      c.rs=c.st.executeQuery("Select * from Owner");
-                                      c.rs.next();
-                              String sname=c.rs.getString("name");
-                                        String scnic=c.rs.getString("cnic");
-                            String saddr=c.rs.getString("addr");
-                            String sno=c.rs.getString("pno");
-                            
-                             c.st=c.con.createStatement();
-                                      c.rs=c.st.executeQuery("Select * from Car where ID='"+NewClass.id+"'");
-                                      c.rs.next();
-                                 String cname=c.rs.getString("name");
-                                 String ccolor=c.rs.getString("color");
-                                 String cmanu=c.rs.getString("tank");
-                                 String cmodel=c.rs.getString("model");
-                                 String cowner=c.rs.getString("carowner");
-                                 String clocation=c.rs.getString("location");
-                                     String cfeul=c.rs.getString("feultype");
-                                         String ctank="2000";
-                                     String doip=c.rs.getString("doip");
-                                  String cmil=c.rs.getString("mil");
-                                  String date=c.rs.getString("date");
-                                 String pricee=c.rs.getString("price");
-                                 
-                                  
-                                 Recipt r=new Recipt( bname, bcnic,baddr, bno,sname,scnic, saddr,  sno,  cname,  ccolor,  cmanu,  cmodel,  cowner,  clocation,  cfeul,  ctank,  doip,  cmil, date, pricee);
-                                      RMDocument rm=new RMDocument(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Myreport.rpt"));
-            RMDocument rep=rm.generateReport(r);
-        rep.write("C:\\Users\\Furqan Parvaz\\Documents\\NetBeansProjects\\re.jpg");
-        NewClass.r=r;
-        Stage p=new Stage();
-         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/repor.fxml"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-         Scene scene = new Scene(root);
-        p.setScene(scene);
-        p.show();
-        
-        
-                                  }catch(Exception ex){
-                                      ex.printStackTrace();
-                                  }
-                                  
-                                  
-                                  
-                             break;
-                }
-                    
-                          }
-                });
-                
-           
-                ol.add(new tablecar(c.rs.getString("id"),c.rs.getString("name"),c.rs.getString("model"),c.rs.getString("color"),c.rs.getString("price"),but));
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+      
+        obj.ini4(tv, ol);
         tv.setItems(ol);
             }
         });
@@ -409,12 +178,12 @@ TableView tv=new TableView<>();
            NewClass.a=tv.getSelectionModel().getSelectedIndex();
             System.out.println(tv.getSelectionModel().getSelectedIndex());
             tablecar tc=(tablecar)tv.getSelectionModel().getSelectedItem();
-            autosaleandpurchasemanagmentsystemfull.NewClass.id=tc.id;
+            Controller.NewClass.id=tc.id;
             try{
                 if(cat.getValue().equals("Sold Cars"))
-                root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/phada_1.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/View/CarDetails2.fxml"));
                 else
-                    root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/phada.fxml"));
+                    root = FXMLLoader.load(getClass().getResource("/View/CarDetails.fxml"));
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -432,7 +201,7 @@ TableView tv=new TableView<>();
         tablecar tcc=(tablecar)tv.getSelectionModel().getSelectedItem();
         NewClass.id=tcc.id;
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/CarUpdate.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/CarUpdate.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -443,10 +212,10 @@ TableView tv=new TableView<>();
     }
 Parent root;
     @FXML
-     void addbtnaction(ActionEvent event) {
+     void addbtnaction(ActionEvent event) { 
         
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/CARSINTER.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/CARSINTER.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -474,7 +243,7 @@ Parent root;
             e.printStackTrace();
         }
          try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -546,7 +315,7 @@ Parent root;
     @FXML
      void homepaneclick(MouseEvent event) {
           try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DashbaordDesign.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DashbaordDesign.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -558,7 +327,7 @@ Parent root;
     @FXML
      void carpaneclick(MouseEvent event) throws IOException {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/DisplayCars.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/DisplayCars.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -570,7 +339,7 @@ Parent root;
     @FXML
      void workerpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/worker.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/worker.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -593,7 +362,7 @@ Parent root;
     @FXML
      void marketpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Advertisment.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Advertisment.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -604,7 +373,7 @@ Parent root;
     @FXML
      void commissionpaneclick(MouseEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/autosaleandpurchasemanagmentsystemfull/Commission.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/View/Commission.fxml"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
